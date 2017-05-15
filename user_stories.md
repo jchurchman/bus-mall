@@ -20,4 +20,5 @@
 
 
 ### Focus Group Participant User Stories
-1. As the Focus Group Participant, I want
+1. As the Focus Group Participant, I want to select the items that I would purchase so the client will know what items to include in their catalog.
+2. As the Focus Group Participant, I want to remain engaged in the selection process so the data I am providing will be valid.
