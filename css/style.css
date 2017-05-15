@@ -1,0 +1,59 @@
+
+/*                              Global Styles */
+
+* {
+    border: 1px black solid;
+}
+
+body, html {
+    margin: 10px auto;
+    padding: 0;
+}
+
+
+
+/*                            Header Styles */
+header * {
+    display: inline-block;
+}
+
+header ul {
+    text-align: right;
+}
+
+header li {
+    display: inline-block;
+    list-style-type: none;
+}
+
+/*                              Main Styles */
+main {
+    overflow: auto;
+    width: 100%;
+}
+aside {
+    margin: 10px;
+    float: left;
+    width: 20%;
+}
+
+section {
+    float: right;
+    width: 60%;
+}
+
+/*                             Form Styles */
+
+figure {
+    display: inline-block;
+}
+
+input.button {
+    display: block;
+}
+
+/*                                 Footer Styles */
+
+footer {
+    text-align: center;
+}

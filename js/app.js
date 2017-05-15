@@ -13,6 +13,69 @@ function catalogItem ( itemId, itemName, itemFilepath) {
     busMallItems.push(this);
 }
 
+catalogItem.prototype.randomIndex = function (arr) {
+    Math.floor(Math.random() * arr.length);
+};
+
+catalogItem.prototype.getIndecies = function (arr) {
+    var selectedIndecies = [];
+    while ( selectedIndecies.length < 3 ) {
+        var option = this.randomIndex(arr);
+
+        if ( selectedIndecies.indexOf( option ) === -1 ) {
+            selectedIndecies.push( option );
+        }
+    }
+    return selectedIndecies;
+};
+
+var button = document.getElementById('button');
+button.addEventListener('click', addSelection );
+
+function addSelection () {
+
+};
+
+function trackLastOptions () {
+
+}
+
+function populateNewOptions () {
+    var imageLoc = document.getElementsByClassName( 'optionImage' );
+    var radioLoc = document.getElementsByClassName( 'optionRadio' );
+
+}
+
+function selectNewOptions () {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function () {
     var bag = new catalogItem( 'bag', 'Bag', '../imgs/newbag.jpg' );
     var banana = new catalogItem ( 'banana', 'Banana', '../imgs/newbanana.jpg' );
@@ -34,6 +97,3 @@ function () {
     var watercan = new catalogItem ( 'watercan', 'Water Can', '../imgs/newwater-can.jpg' );
     var wineglass = new catalogItem ( 'wineglass', 'Wine Glass', '../imgs/newwine-glass.jpg' );
 };
-
-console.log( busMallItems[0], busMallItems[14]);
-busMallItems;
