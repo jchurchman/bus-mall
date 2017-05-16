@@ -61,22 +61,17 @@ var doAllTheWork = {
             } else if ( (this.checkLastGroup() === true) && (this.checkNowGroup() === true) ) {
                 this.nowGroup.push( this.randoNo );
                 this.randoNo = 0;
-
-            } else {
-                console.log('it matched somewhere ');
-            }
+            } 
         }
     },
     populateOptions: function () {
         for ( var i = 0; i < this.nowGroup.length; i++ ) {
             var imageLoc = document.getElementsByClassName('optionImage')[i];  /*grabs an image tag with the class */
-            console.log( 'imageLoc is ' + imageLoc );
             var wordLoc = document.getElementsByClassName('optionName')[i];  /*grabs a fig caption tag by class */
-            console.log( 'wordLoc is ' + wordLoc );
             var imgSrc = busMallItems[this.nowGroup[i]].itemFilepath; /* grabs an image filepath referenced by index */
-            console.log( 'imgSrc is ' + imgSrc );
             var nameLoc = busMallItems[this.nowGroup[i]].itemName; /* grabs an item name referenced by index */
-            console.log( 'nameLoc is ' + nameLoc );
+            var imgId = busMallItems[this.nowGroup[i]].itemId;
+            imageLoc.id = imgId;
             imageLoc.src=imgSrc; /*appends an image filepath to the image src */
             wordLoc.textContent = nameLoc; /* adds the image name to the fig caption */
             var optionIndex = this.nowGroup[i];
@@ -84,6 +79,14 @@ var doAllTheWork = {
             }
             this.trackThisGroup();
             this.resetThisGroup();
+    },
+    trackVotes: function () {
+        var gotClicked = event.target.id;
+        this.lastGroup.forEach(function(element, index) {
+            if (busMallItems[doAllTheWork.lastGroup[index]].itemId === gotClicked){
+                busMallItems[doAllTheWork.lastGroup[index]].noTimesClicked = busMallItems[doAllTheWork.lastGroup[index]].noTimesClicked + 1;
+            }
+        });
     }
 };
 
@@ -91,35 +94,14 @@ var selectOption = document.getElementById( 'eventSite' );
 selectOption.addEventListener( 'click', voteHandler );
 var votes = 0;
 
-function voteHandler ( event ) {
+function voteHandler () {
     event.preventDefault();
+    if ( ( event.target.src ) && ( votes < 25 ) ) {
+    doAllTheWork.trackVotes();
     doAllTheWork.fillRandomIndicies();
     doAllTheWork.populateOptions();
     votes = votes + 1;
+    }
 }
-
-
-//     for (var l = 0; l < 3; l++) {
-
-//     lastGroup=thisGroup;
-//     thisGroup=[];
-//     }
-
-
-// catalogItem.prototype.displayOptions = function () {
-//     var randomOptions = this.getIndecies( busMallItems );
-//     var index1 = randomOptions[0];
-//     var index2 = randomOptions[1];
-//     var index3 = randomOptions[2];
-
-//     var option1 = busMallItems[index1];
-//     var option2 = busMallItems[index2];
-//     var option3 = busMallItems[index3];
-
-//     this.option1.innerText = option1.itemName;
-//     this.option2.innerText = option2.itemName;
-//     this.option3.innerText = option3.itemName;
-// };
-
 
 instantiateOptions();
