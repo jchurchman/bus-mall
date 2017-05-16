@@ -17,7 +17,7 @@ function instantiateOptions() {
     var bag = new catalogItem( 'bag', 'Bag', './imgs/newbag.jpg' );
     var banana = new catalogItem ( 'banana', 'Banana', './imgs/newbanana.jpg' );
     var bathroom = new catalogItem ( 'bathroom', 'Bathroom', './imgs/newbathroom.jpg' );
-    var boots = new catalogItem ( 'boots', 'Boots', '../imgs/newboots.jpg' );
+    var boots = new catalogItem ( 'boots', 'Boots', './imgs/newboots.jpg' );
     var breakfast = new catalogItem ( 'breakfast', 'Breakfast', './imgs/newbreakfast.jpg' );
     var bubblegum = new catalogItem ( 'bubblegum', 'Bubblegum', './imgs/newbubblegum.jpg' );
     var chair = new catalogItem ( 'chair', 'Chair', './imgs/newchair.jpg' );
@@ -35,103 +35,145 @@ function instantiateOptions() {
     var wineglass = new catalogItem ( 'wineglass', 'Wine Glass', './imgs/newwine-glass.jpg' );
 }
 
-instantiateOptions();
-
 function doAllTheWork () {
+    
     var randomIndecies = [];
     while ( randomIndecies.length < 3 ) {
         var getRandomIndecies = (Math.floor(Math.random() * busMallItems.length)); /* Generates random index number within array length of busMallItems */
-        if ( randomIndecies.indexOf( getRandomIndecies ) === -1 && randomIndecies.indexOf ( lastGroup ) === -1 ) { /* Compares randomly generated index number to previously generated numbers or previously shown numbers */
-            randomIndecies.push(getRandomIndecies); /* If no match from line 44, pushes randomly generated index into randomIndecies array */
-        }
+        if ( thisGroup.length === 0 ) {
+            for (var i=0; i < lastGroup.length; i++){
+                if ( getRandomIndecies === lastGroup[i] ) {
+                    break;
+                } else {
+                    thisGroup.push ( getRandomIndecies );
+                }
+            }
+            }
+        do {
+            for (var j = 0; j < lastGroup.length; j++) {
+                if (getRandomIndecies === lastGroup[j]) {
+                    break;
+                } else {
+                    for (var k = 0; k < thisGroup.length; k++) {
+                        if (getRandomIndecies === thisGroup[k]) {
+                            break;
+                        } else {
+                            thisGroup.push(getRandomIndecies);
+                            break;
+                        }
+                    }
+                }
+            }
+        } while (thisGroup.length < 3);
     }
-    for (var i = 0; i < 3; i++) {
-        var imageLoc = document.getElementsByClassName('optionImage')[i];  /*grabs an image tag with the class */
-        console.log('imageLoc is ' + imageLoc);
-        var wordLoc = document.getElementsByClassName('optionName')[i];  /*grabs a fig caption tag by class */
-        console.log('wordLoc is ' + wordLoc);
-        var imgSrc = busMallItems[randomIndecies[i]].itemFilepath; /* grabs an image filepath referenced by index */
-        console.log('imgSrc is ' + imgSrc);
-        var nameLoc = busMallItems[randomIndecies[i]].itemName; /* grabs an item name referenced by index */
-        console.log('nameLoc is ' + nameLoc);
+    for (var l = 0; l < 3; l++) {
+        var imageLoc = document.getElementsByClassName('optionImage')[l];  /*grabs an image tag with the class */
+        var wordLoc = document.getElementsByClassName('optionName')[l];  /*grabs a fig caption tag by class */
+        var imgSrc = busMallItems[randomIndecies[l]].itemFilepath; /* grabs an image filepath referenced by index */
+        var nameLoc = busMallItems[randomIndecies[l]].itemName; /* grabs an item name referenced by index */
         imageLoc.src=imgSrc; /*appends an image filepath to the image src */
         wordLoc.textContent = nameLoc; /* adds the image name to the fig caption */
-        busMallItems[randomIndecies[i]].noTimesShown = busMallItems[randomIndecies[i]].noTimesShown + 1; /* adds one to the times shown property of the item manipulated by this loop */
+        busMallItems[randomIndecies[l]].noTimesShown = busMallItems[randomIndecies[l]].noTimesShown + 1; /* adds one to the times shown property of the item manipulated by this loop */
     }
-    
+
+    lastGroup=thisGroup;
+    thisGroup=[];
+    }
+
+
+catalogItem.prototype.displayOptions = function () {
+    var randomOptions = this.getIndecies( busMallItems );
+    var index1 = randomOptions[0];
+    var index2 = randomOptions[1];
+    var index3 = randomOptions[2];
+
+    var option1 = busMallItems[index1];
+    var option2 = busMallItems[index2];
+    var option3 = busMallItems[index3];
+
+    this.option1.innerText = option1.itemName;
+    this.option2.innerText = option2.itemName;
+    this.option3.innerText = option3.itemName;
+};
+
+var selectOption = document.getElementById( 'eventSite' );
+selectOption.addEventListener( 'click', voteHandler );
+var votes = 0;
+
+function voteHandler ( event ) {
+    event.preventDefault();
+    while (votes < 24) {
+    doAllTheWork();
+    votes = votes + 1;
+    }
 }
 
+instantiateOptions();
 
+// var tracker = {
+//     option1: document.getElementsByClassName('optionName')[0],
+//     option2: document.getElementsByClassName('optionName')[1],
+//     option3: document.getElementsByClassName('optionName')[2],
+//     image1: document.getElementsByClassName('optionImage')[0],
+//     image2: document.getElementsByClassName('optionImage')[1],
+//     image3: document.getElementsByClassName('optionImage')[2],
+//     displaySection: document.getElementById('display'),
+//     votes: 0,
 
+//     randomIndex: function (arr) {
+//         return Math.floor(Math.random() * arr.length);
+//     },
 
-thisGroup.forEach(function () {
-    console.log( 'lastGroup was ' + lastGroup );
-    lastGroup.shift();
-    console.log( 'lastGroup is ' + lastGroup );
-    lastGroup.push();
-    console.log( 'lastGrup is now ' + lastGroup );
-});
+//     getIndicies: function (arr) {
+//         var selectedIndicies = [];
+//         while ( selectedIndicies.length < 3 ) {
+//             var item = this.randomIndex(arr);
 
+//             if ( selectedIndicies.length === 0 ) {
+//                 selectedIndicies.push( item );
+//             }
+//             for (var i = 0; i < selectedIndicies.length; i++) {
+//                 if ( selectedIndicies[i] === item ) {
+//                     break;
+//                 } else {
+//                     selectedIndicies.push( item );
+//                     break;
+//                 }
+//             }
+//         }
+//         return selectedIndicies;
+//     },
 
+//     displayOptions: function () {
+//         var randomOptions = this.getIndicies( busMallItems );
+//         var index1 = randomOptions[0];
+//         var index2 = randomOptions[1];
+//         var index3 = randomOptions[2];
 
-// catalogItem.prototype.displayOptions = function () {
-//     var randomOptions = this.getIndecies( busMallItems );
-//     var index1 = randomOptions[0];
-//     var index2 = randomOptions[1];
-//     var index3 = randomOptions[2];
+//         var option1 = busMallItems[index1];
+//         var option2 = busMallItems[index2];
+//         var option3 = busMallItems[index3];
 
-//     var option1 = busMallItems[index1];
-//     var option2 = busMallItems[index2];
-//     var option3 = busMallItems[index3];
+//         this.option1.innerText = option1.itemName;
+//         this.option2.innerText = option2.itemName;
+//         this.option3.innerText = option3.itemName;
 
-//     this.option1.innerText = option1.itemName;
-//     this.option2.innerText = option2.itemName;
-//     this.option3.innerText = option3.itemName;
-// }
+//         this.option1.id = option1.itemId;
+//         this.option2.id = option2.itemId;
+//         this.option3.id = option3.itemId;
 
-// var button = document.getElementById('button');
-// button.addEventListener('click', addSelection );
+//         this.image1.src = option1.itemFilepath;
+//         this.image2.src = option2.itemFilepath;
+//         this.image3.src = option3.itemFilepath;
+//     },
 
-// function addSelection () {
+//     tallyVote: function ( itemId ) {
+//         this.votes += 1;
 
+//         busMallItems.forEach(function ( option ) {
+//             if ( option.id === itemId ) {
+//                 option.votes += 1;
+//             }
+//         });
+//     },
 // };
-
-// function trackLastOptions () {
-
-// }
-
-// function populateNewOptions () {
-//     var imageLoc = document.getElementsByClassName( 'optionImage' );
-//     var radioLoc = document.getElementsByClassName( 'optionRadio' );
-
-// }
-
-// function selectNewOptions () {
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
