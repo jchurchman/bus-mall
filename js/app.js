@@ -79,15 +79,24 @@ var doAllTheWork = {
             console.log( 'nameLoc is ' + nameLoc );
             imageLoc.src=imgSrc; /*appends an image filepath to the image src */
             wordLoc.textContent = nameLoc; /* adds the image name to the fig caption */
-            // console.log( 'this.nowGroup[i] is ' + this.nowGroup[i] );
-            // console.log( 'busMallItems[this.nowGroup[i]] is ' + busMallItems[this.nowGroup[i]] );
-            // console.log( 'busMallItems[this.nowGroup[i]].noTimesShown is ' + busMallItems[this.nowGroup[i]].noTimesShown );
-            // busMallItems[this.nowGroup[i]].noTimesShown = busMallItems[this.nowGroupi[i]].noTimesShown + 1; /* adds one to the times shown property of the item manipulated by this loop */
+            var optionIndex = this.nowGroup[i];
+            busMallItems[optionIndex].noTimesShown = busMallItems[optionIndex].noTimesShown + 1; /* adds one to the times shown property of the item manipulated by this loop */
             }
             this.trackThisGroup();
             this.resetThisGroup();
     }
 };
+
+var selectOption = document.getElementById( 'eventSite' );
+selectOption.addEventListener( 'click', voteHandler );
+var votes = 0;
+
+function voteHandler ( event ) {
+    event.preventDefault();
+    doAllTheWork.fillRandomIndicies();
+    doAllTheWork.populateOptions();
+    votes = votes + 1;
+}
 
 
 //     for (var l = 0; l < 3; l++) {
@@ -112,16 +121,5 @@ var doAllTheWork = {
 //     this.option3.innerText = option3.itemName;
 // };
 
-// var selectOption = document.getElementById( 'eventSite' );
-// selectOption.addEventListener( 'click', voteHandler );
-// var votes = 0;
-
-// function voteHandler ( event ) {
-//     event.preventDefault();
-//     while (votes < 24) {
-//     doAllTheWork();
-//     votes = votes + 1;
-//     }
-// }
 
 instantiateOptions();
