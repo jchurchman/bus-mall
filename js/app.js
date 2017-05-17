@@ -1,7 +1,5 @@
 'use strict';
 
-var lastGroup = [];
-var thisGroup = [];
 var busMallItems = [];
 
 function catalogItem ( itemId, itemName, itemFilepath) {
@@ -35,145 +33,121 @@ function instantiateOptions() {
     var wineglass = new catalogItem ( 'wineglass', 'Wine Glass', './imgs/newwine-glass.jpg' );
 }
 
-function doAllTheWork () {
-    
-    var randomIndecies = [];
-    while ( randomIndecies.length < 3 ) {
-        var getRandomIndecies = (Math.floor(Math.random() * busMallItems.length)); /* Generates random index number within array length of busMallItems */
-        if ( thisGroup.length === 0 ) {
-            for (var i=0; i < lastGroup.length; i++){
-                if ( getRandomIndecies === lastGroup[i] ) {
-                    break;
-                } else {
-                    thisGroup.push ( getRandomIndecies );
-                }
+var doAllTheWork = {
+    lastGroup: [],
+    nowGroup: [],
+    randoNo: 0,
+    getRandomIndicies: function () {
+        this.randoNo = (Math.floor(Math.random() * busMallItems.length));
+    },
+    trackThisGroup: function () {
+        this.lastGroup = this.nowGroup;
+    },
+    resetThisGroup: function () {
+        this.nowGroup = [];
+    },
+    checkLastGroup: function () {
+        return (this.lastGroup.indexOf( this.randoNo ) === -1 );
+    },
+    checkNowGroup: function () {
+        return (this.nowGroup.indexOf( this.randoNo ) === -1);
+    },
+    fillRandomIndicies: function () {
+        while ( this.nowGroup.length < 3) {
+            this.getRandomIndicies();
+            if ( (this.nowGroup.length === 0) && (this.checkLastGroup() === true) ) {
+                this.nowGroup.push( this.randoNo );
+                this.randoNo = 0;
+            } else if ( (this.checkLastGroup() === true) && (this.checkNowGroup() === true) ) {
+                this.nowGroup.push( this.randoNo );
+                this.randoNo = 0;
+            } 
+        }
+    },
+    populateOptions: function () {
+        for ( var i = 0; i < this.nowGroup.length; i++ ) {
+            var imageLoc = document.getElementsByClassName('optionImage')[i];  /*grabs an image tag with the class */
+            var wordLoc = document.getElementsByClassName('optionName')[i];  /*grabs a fig caption tag by class */
+            var imgSrc = busMallItems[this.nowGroup[i]].itemFilepath; /* grabs an image filepath referenced by index */
+            var nameLoc = busMallItems[this.nowGroup[i]].itemName; /* grabs an item name referenced by index */
+            var imgId = busMallItems[this.nowGroup[i]].itemId;
+            imageLoc.id = imgId;
+            imageLoc.src=imgSrc; /*appends an image filepath to the image src */
+            wordLoc.textContent = nameLoc; /* adds the image name to the fig caption */
+            var optionIndex = this.nowGroup[i];
+            busMallItems[optionIndex].noTimesShown = busMallItems[optionIndex].noTimesShown + 1; /* adds one to the times shown property of the item manipulated by this loop */
             }
+            this.trackThisGroup();
+            this.resetThisGroup();
+    },
+    trackVotes: function () {
+        var gotClicked = event.target.id;
+        this.lastGroup.forEach(function(element, index) {
+            if (busMallItems[doAllTheWork.lastGroup[index]].itemId === gotClicked){
+                busMallItems[doAllTheWork.lastGroup[index]].noTimesClicked = busMallItems[doAllTheWork.lastGroup[index]].noTimesClicked + 1;
             }
-        do {
-            for (var j = 0; j < lastGroup.length; j++) {
-                if (getRandomIndecies === lastGroup[j]) {
-                    break;
-                } else {
-                    for (var k = 0; k < thisGroup.length; k++) {
-                        if (getRandomIndecies === thisGroup[k]) {
-                            break;
-                        } else {
-                            thisGroup.push(getRandomIndecies);
-                            break;
-                        }
-                    }
-                }
-            }
-        } while (thisGroup.length < 3);
+        });
     }
-    for (var l = 0; l < 3; l++) {
-        var imageLoc = document.getElementsByClassName('optionImage')[l];  /*grabs an image tag with the class */
-        var wordLoc = document.getElementsByClassName('optionName')[l];  /*grabs a fig caption tag by class */
-        var imgSrc = busMallItems[randomIndecies[l]].itemFilepath; /* grabs an image filepath referenced by index */
-        var nameLoc = busMallItems[randomIndecies[l]].itemName; /* grabs an item name referenced by index */
-        imageLoc.src=imgSrc; /*appends an image filepath to the image src */
-        wordLoc.textContent = nameLoc; /* adds the image name to the fig caption */
-        busMallItems[randomIndecies[l]].noTimesShown = busMallItems[randomIndecies[l]].noTimesShown + 1; /* adds one to the times shown property of the item manipulated by this loop */
-    }
-
-    lastGroup=thisGroup;
-    thisGroup=[];
-    }
-
-
-catalogItem.prototype.displayOptions = function () {
-    var randomOptions = this.getIndecies( busMallItems );
-    var index1 = randomOptions[0];
-    var index2 = randomOptions[1];
-    var index3 = randomOptions[2];
-
-    var option1 = busMallItems[index1];
-    var option2 = busMallItems[index2];
-    var option3 = busMallItems[index3];
-
-    this.option1.innerText = option1.itemName;
-    this.option2.innerText = option2.itemName;
-    this.option3.innerText = option3.itemName;
 };
 
 var selectOption = document.getElementById( 'eventSite' );
 selectOption.addEventListener( 'click', voteHandler );
 var votes = 0;
 
-function voteHandler ( event ) {
+function voteHandler () {
     event.preventDefault();
-    while (votes < 24) {
-    doAllTheWork();
+    if (votes > 24) {
+        var optionNames = [];
+        var noTimesShownArray = [];
+        var noTimesClickedArray = [];
+        busMallItems.forEach(function(item){
+            optionNames.push(item.itemName);
+            console.log(optionNames);
+            noTimesShownArray.push(item.noTimesShown);
+            console.log(noTimesShownArray);
+            noTimesClickedArray.push(item.noTimesClicked);
+            console.log(noTimesClickedArray);
+        });
+        var context = document.getElementById( 'busMallChart' );
+        var busMallChart = new Chart(context, {
+            type: 'bar',
+            data: {
+                labels: optionNames,
+                datasets: [{
+                    label: '# of times seen',
+                    data: noTimesShownArray,
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1
+                },
+                {
+                    label: '# of times clicked',
+                    data: noTimesClickedArray,
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1
+                }]
+            },
+            options: { 
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        return;
+    }
+    if ( event.target.src ) {
+    doAllTheWork.trackVotes();
+    doAllTheWork.fillRandomIndicies();
+    doAllTheWork.populateOptions();
     votes = votes + 1;
     }
 }
 
 instantiateOptions();
-
-// var tracker = {
-//     option1: document.getElementsByClassName('optionName')[0],
-//     option2: document.getElementsByClassName('optionName')[1],
-//     option3: document.getElementsByClassName('optionName')[2],
-//     image1: document.getElementsByClassName('optionImage')[0],
-//     image2: document.getElementsByClassName('optionImage')[1],
-//     image3: document.getElementsByClassName('optionImage')[2],
-//     displaySection: document.getElementById('display'),
-//     votes: 0,
-
-//     randomIndex: function (arr) {
-//         return Math.floor(Math.random() * arr.length);
-//     },
-
-//     getIndicies: function (arr) {
-//         var selectedIndicies = [];
-//         while ( selectedIndicies.length < 3 ) {
-//             var item = this.randomIndex(arr);
-
-//             if ( selectedIndicies.length === 0 ) {
-//                 selectedIndicies.push( item );
-//             }
-//             for (var i = 0; i < selectedIndicies.length; i++) {
-//                 if ( selectedIndicies[i] === item ) {
-//                     break;
-//                 } else {
-//                     selectedIndicies.push( item );
-//                     break;
-//                 }
-//             }
-//         }
-//         return selectedIndicies;
-//     },
-
-//     displayOptions: function () {
-//         var randomOptions = this.getIndicies( busMallItems );
-//         var index1 = randomOptions[0];
-//         var index2 = randomOptions[1];
-//         var index3 = randomOptions[2];
-
-//         var option1 = busMallItems[index1];
-//         var option2 = busMallItems[index2];
-//         var option3 = busMallItems[index3];
-
-//         this.option1.innerText = option1.itemName;
-//         this.option2.innerText = option2.itemName;
-//         this.option3.innerText = option3.itemName;
-
-//         this.option1.id = option1.itemId;
-//         this.option2.id = option2.itemId;
-//         this.option3.id = option3.itemId;
-
-//         this.image1.src = option1.itemFilepath;
-//         this.image2.src = option2.itemFilepath;
-//         this.image3.src = option3.itemFilepath;
-//     },
-
-//     tallyVote: function ( itemId ) {
-//         this.votes += 1;
-
-//         busMallItems.forEach(function ( option ) {
-//             if ( option.id === itemId ) {
-//                 option.votes += 1;
-//             }
-//         });
-//     },
-// };
