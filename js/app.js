@@ -98,8 +98,8 @@ var votes = 0;
 function voteHandler() {
     event.preventDefault();
     if (votes > 24) {
+        selectOption.innerHTML = '<canvas id="busMallChart" width="350" height="200"></canvas>';
         var optionNames = [];
-        // var noTimesShownArray = [];
         var timesClickedArray = [];
         if (clicks.length) {
             for (var i = 0; i < busMallItems.length; i++) {
@@ -120,7 +120,7 @@ function voteHandler() {
                 datasets: [{
                         label: '# of times clicked',
                         data: timesClickedArray,
-                        backgroundColor: [],
+                        backgroundColor: ['#ff0000','#cc6699', '#cc00cc', '#6600ff', '#0000ff', '#0099cc', '#00cc99', '#009933', '#99cc00', '#ff9900', '#ff6600', '#ff3399', '#cc33ff', '#3366ff', '#00ccff', '#00ff99', '#66ff33', '#ffff00', '#ff6600'],
                         borderColor: [],
                         borderWidth: 1
                     }]
@@ -131,7 +131,8 @@ function voteHandler() {
                     yAxes: [{
                         ticks: {
                             beginAtZero: true
-                        }
+                        },
+                        stepSize: 1,
                     }]
                 }
             }
