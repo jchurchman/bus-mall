@@ -96,7 +96,53 @@ var votes = 0;
 
 function voteHandler () {
     event.preventDefault();
-    if ( ( event.target.src ) && ( votes < 25 ) ) {
+    if (votes > 24) {
+        var optionNames = [];
+        var noTimesShownArray = [];
+        var noTimesClickedArray = [];
+        busMallItems.forEach(function(item){
+            optionNames.push(item.itemName);
+            console.log(optionNames);
+            noTimesShownArray.push(item.noTimesShown);
+            console.log(noTimesShownArray);
+            noTimesClickedArray.push(item.noTimesClicked);
+            console.log(noTimesClickedArray);
+        });
+        var context = document.getElementById( 'busMallChart' );
+        var busMallChart = new Chart(context, {
+            type: 'bar',
+            data: {
+                labels: optionNames,
+                datasets: [{
+                    label: '# of times seen',
+                    data: noTimesShownArray,
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1
+                },
+                {
+                    label: '# of times clicked',
+                    data: noTimesClickedArray,
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1
+                }]
+            },
+            options: { 
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+        return;
+    }
+    if ( event.target.src ) {
     doAllTheWork.trackVotes();
     doAllTheWork.fillRandomIndicies();
     doAllTheWork.populateOptions();
