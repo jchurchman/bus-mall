@@ -2,69 +2,111 @@
 /*                              Global Styles */
 
 * {
-    border: 1px black solid;
 }
 
 body, html {
-    margin: 10px auto;
-    padding: 0;
+    border: 1px black solid;
+    margin: auto;
 }
 
+body {
+    padding: 2%;
+
+}
 
 
 /*                            Header Styles */
-header * {
+header {
+    border: 1px black solid;
+    background-color: #33cccc;
+
+}
+header h1{
+    max-width: 45%;
+    font-family: 'Poppins', sans-serif;
     display: inline-block;
+    position: relative;
+    top: 10px;
+    left: 2%;
+
+    transition: left 3s ease;
 }
 
-header ul {
-    text-align: right;
-}
-
-header li {
-    display: inline-block;
-    list-style-type: none;
+header h1:hover {
+    left: 50%;
 }
 
 /*                              Main Styles */
 main {
-    overflow: auto;
-    width: 100%;
+    border: 1px black solid;
+    min-height: 750px;
+
 }
 aside {
-    margin: 10px;
-    float: left;
+    height: 748px;
     width: 25%;
+    border: 1px black solid;
+    float: left;
+    clear: right;
+
 }
 
 section {
-    float: right;
-    width: 70%;
+    /*position: relative;
+    left: 31%;
+    clear: right;*/
+
 }
 
-/*                             Form Styles */
-/*fieldset {
-    width: fit-content;
-}*/
+article {
+    margin: 0 0 0 26%;
+    width: 68%;
+    text-align: center;
+}
+
+article.eventSite {
+    max-height: 300px;
+    height: 300px;
+    min-height: 300px;
+
+}
+
+form {
+    text-align: center;
+}
 
 figure {
-    /*width: fit-content;*/
     display: inline-block;
-    width: 30%;
-    max-width: 200px;
-    min-width: 100px;
+    max-width: 30%;
+
 }
 
 figure img {
-    width: 30%;
-    max-width: 200px;
-    min-width: 100px;
-
+    max-width: 150px;
+    opacity: 1;
+        transition: left 1s ease;
 }
 
+figure img:hover {
+    opacity: .6;
+}
+
+canvas {
+    margin: auto;
+    max-width: 450px;
+    max-height: 300px;
+}
+input {
+    transition: background-color 4s ease-in;
+}
+
+input:hover {
+    background-color: #f2000c
+}
 
 /*                                 Footer Styles */
 
 footer {
+    background-color: #33cccc;
     text-align: center;
 }
