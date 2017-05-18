@@ -120,7 +120,7 @@ function voteHandler() {
                 optionNames.push(busMallItems[i].itemName);
                 userClickedArray.push(busMallItems[i].noTimesClicked);
                 console.log(userClickedArray);
-	            totalClickedArray.push(busMallItems[i].noTimesClicked + clicks[i]);
+                totalClickedArray.push(busMallItems[i].noTimesClicked + clicks[i]);
                 console.log(totalClickedArray);
             }
         } else {
