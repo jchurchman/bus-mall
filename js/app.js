@@ -98,54 +98,112 @@ var votes = 0;
 function voteHandler() {
     event.preventDefault();
     if (votes > 24) {
-        selectOption.innerHTML = '<canvas id="busMallChart" width="350" height="200"></canvas>';
+        var totalChartLoc = document.getElementById('totalChartLoc');
+        totalChartLoc.innerHTML = '<canvas id="totalChart" width="350" height="200"></canvas><form action="#" id="resetAggregateButton">                </form>';
         var optionNames = [];
-        var timesClickedArray = [];
+        var userClickedArray = [];
+        var totalClickedArray = [];
+        var context2 = document.getElementById('totalChart');
+        selectOption.innerHTML = '<canvas id=instanceChart width="250" height="200"></canvas><form action="#" id="resetInstanceButton"></form>';
+        var context1 = document.getElementById('instanceChart');
+        var addResetAggregateButton = document.getElementById('resetAggregateButton');
+        addResetAggregateButton.innerHTML = '<input type="submit" name="reset" value="Reset" id="resetAggregate" />';
+        var resetAggregate = document.getElementById('resetAggregate');
+        resetAggregate.addEventListener('click', resetAggregateHandler);
+        var addResetInstanceButton = document.getElementById('resetInstanceButton');
+        addResetInstanceButton.innerHTML = '<input type="submit" name="reset" value="Reset" id="resetInstance" />';
+        var resetInstance = document.getElementById('resetInstance');
+        resetInstance.addEventListener('click', resetInstanceHandler);
         if (clicks.length) {
+            console.log("clicks has data" + clicks);
             for (var i = 0; i < busMallItems.length; i++) {
                 optionNames.push(busMallItems[i].itemName);
-                timesClickedArray.push(busMallItems[i].noTimesClicked + clicks[i]);
+                userClickedArray.push(busMallItems[i].noTimesClicked);
+                console.log(userClickedArray);
+	            totalClickedArray.push(busMallItems[i].noTimesClicked + clicks[i]);
+                console.log(totalClickedArray);
             }
         } else {
+            console.log("clicks is emtpy" + clicks);
             for (var j = 0; j < busMallItems.length; j++) {
                 optionNames.push(busMallItems[j].itemName);
-                timesClickedArray.push(busMallItems[j].noTimesClicked);
+                userClickedArray.push(busMallItems[j].noTimesClicked);
+                console.log('userClickedArray is ' + userClickedArray);
+                totalClickedArray.push(busMallItems[j].noTimesClicked);
+                console.log('totalClickedArray is ' + totalClickedArray);
             }
         }
-        var context = document.getElementById('busMallChart');
-        var busMallChart = new Chart(context, {
+        var focusUserChart = new Chart(context1, {
             type: 'bar',
             data: {
                 labels: optionNames,
                 datasets: [{
-                        label: '# of times clicked',
-                        data: timesClickedArray,
-                        backgroundColor: ['#ff0000','#cc6699', '#cc00cc', '#6600ff', '#0000ff', '#0099cc', '#00cc99', '#009933', '#99cc00', '#ff9900', '#ff6600', '#ff3399', '#cc33ff', '#3366ff', '#00ccff', '#00ff99', '#66ff33', '#ffff00', '#ff6600'],
-                        borderColor: [],
-                        borderWidth: 1
-                    }]
+                    label: '# of times clicked this instance',
+                    data: userClickedArray,
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1
+                }]
             },
             options: {
                 responsive: true,
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            stepSize: 1
                         },
-                        stepSize: 1,
                     }]
                 }
             }
         });
-        localStorage.setItem('storedClicks', JSON.stringify(timesClickedArray));
+        var busMallChart = new Chart(context2, {
+            type: 'bar',
+            data: {
+                labels: optionNames,
+                datasets: [{
+                    label: '# of times clicked in total',
+                    data: totalClickedArray,
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1
+                        },
+                    }]
+                }
+            }
+        });
+        localStorage.setItem('storedClicks', JSON.stringify(totalClickedArray));
         return;
     }
-    if (event.target.src) {
+    if (event.target.src || event.target.class) {
         doAllTheWork.trackVotes();
         doAllTheWork.fillRandomIndicies();
         doAllTheWork.populateOptions();
         votes = votes + 1;
     }
+}
+
+function resetAggregateHandler() {
+    event.preventDefault();
+    localStorage.clear();
+}
+function resetInstanceHandler() {
+    event.preventDefault();
+    votes = 0;
+    for (var i = 0; i < busMallItems.length; i++){
+        busMallItems[i].noTimesClicked = 0;
+    }
+    selectOption.innerHTML = '<figure><img src="" alt="" class="optionImage" id="" /><br /><figcaption class="optionName"></figcaption></figure><figure><img src="" alt="Click here to start." class="optionImage" id="" /><br /><figcaption class="optionName"></figcaption></figure><figure><img src="" alt="" class="optionImage" id="" /><br /><figcaption class="optionName"></figcaption></figure>';
+    clicks = JSON.parse(localStorage.getItem('storedClicks'));
 }
 
 instantiateOptions();
