@@ -55,7 +55,7 @@ figure {
     min-width: 100px;
 }
 
-fieldset img {
+figure img {
     width: 30%;
     max-width: 200px;
     min-width: 100px;
